@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="HelloWorld" targetNamespace="http://apache.org/hello_world_soap_zmq"
+                  xmlns="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://apache.org/hello_world_soap_zmq"
+                  xmlns:x1="http://apache.org/hello_world_soap_zmq/types"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:zmq="http://cxf.apache.org/transports/zmq"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <wsdl:types>
+        <schema targetNamespace="http://apache.org/hello_world_soap_zmq/types"
+                xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <element name="sayHi">
+                <complexType/>
+            </element>
+            <element name="sayHiResponse">
+                <complexType>
+                    <sequence>
+                        <element name="responseType" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </wsdl:types>
+
+    <wsdl:message name="sayHiRequest">
+        <wsdl:part element="x1:sayHi" name="in"/>
+    </wsdl:message>
+    <wsdl:message name="sayHiResponse">
+        <wsdl:part element="x1:sayHiResponse" name="out"/>
+    </wsdl:message>
+
+    <wsdl:portType name="Greeter">
+        <wsdl:operation name="sayHi">
+            <wsdl:input message="tns:sayHiRequest" name="sayHiRequest"/>
+            <wsdl:output message="tns:sayHiResponse" name="sayHiResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="Greeter_SOAPBinding" type="tns:Greeter">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/zmq"/>
+        <wsdl:operation name="sayHi">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="sayHiRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="sayHiResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="SOAPService">
+        <wsdl:port binding="tns:Greeter_SOAPBinding" name="SoapPort">
+            <zmq:address location="tcp://127.0.0.1:9000"/>
+            <zmq:serviceConfig socketOperation="bind" socketType="rep"/>
+            <zmq:clientConfig socketOperation="connect" socketType="req"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
