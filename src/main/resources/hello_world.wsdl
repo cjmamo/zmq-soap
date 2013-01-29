@@ -39,7 +39,7 @@
     </wsdl:portType>
 
     <wsdl:binding name="Greeter_SOAPBinding" type="tns:Greeter">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/zmq"/>
+        <soap:binding style="document" transport="http://cxf.apache.org/transports/zmq"/>
         <wsdl:operation name="sayHi">
             <soap:operation soapAction="" style="document"/>
             <wsdl:input name="sayHiRequest">
